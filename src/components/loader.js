@@ -12,7 +12,7 @@ module.exports.Component = registerComponent('loader', {
     src: { default: '' },
     format: {
       default: 'obj',
-      oneOf: ['obj', 'collada']
+      oneOf: ['obj', 'collada', 'gltf']
     }
   },
 
@@ -33,6 +33,9 @@ module.exports.Component = registerComponent('loader', {
         break;
       case 'collada':
         this.loadCollada(url);
+        break;
+      case 'gltf':
+        this.loadGLTF(url);
         break;
       default:
         warn('Model format not supported');
@@ -68,6 +71,16 @@ module.exports.Component = registerComponent('loader', {
     loader.load(url, function (collada) {
       self.model = collada.scene;
       el.object3D.add(collada.scene);
+    });
+  },
+
+  loadGLTF: function (url) {
+    var self = this;
+    var el = this.el;
+    var loader = new THREE.glTFLoader;
+    loader.load(url, function (gltf) {
+      self.model = gltf.scene;
+      el.object3D.add(gltf.scene);
     });
   }
 });
